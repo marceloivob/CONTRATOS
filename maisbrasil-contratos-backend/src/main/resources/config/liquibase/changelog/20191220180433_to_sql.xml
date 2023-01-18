@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="20191220180512" author="leonardo.assis" context="modelo_inicial">
+        <sqlFile path="config/liquibase/changelog/20191220180512_02-sequences.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20191220180513" author="leonardo.assis" context="modelo_inicial">
+        <sqlFile path="config/liquibase/changelog/20191220180513_03-tabelas.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20191220180514" author="leonardo.assis" context="modelo_inicial">
+        <sqlFile path="config/liquibase/changelog/20191220180514_04-triggers.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20191220180515" author="leonardo.assis" context="modelo_inicial">
+        <sqlFile path="config/liquibase/changelog/20191220180515_05.1-grants_p.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20191220180517" author="ivan.leite" context="concorrencia">
+        <sqlFile path="config/liquibase/changelog/2019220180517_06_triggers_concorrencia.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20191220180518" author="ivan.leite" context="concorrencia">
+        <sqlFile path="config/liquibase/changelog/2019220180518_06_02_grants_triggers.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20200113103010_08_mvp02.1" author="fabio.guerra" context="mvp02_checklist">
+        <sqlFile path="config/liquibase/changelog/20200113103010_08_mvp02.1.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20200113141345_09.1_grants_mvp02.1_p" author="fabio.guerra" context="mvp02_checklist">
+        <sqlFile path="config/liquibase/changelog/20200113141345_09.1_grants_mvp02.1_p.sql" splitStatements="false"/>
+    </changeSet>
+</databaseChangeLog>

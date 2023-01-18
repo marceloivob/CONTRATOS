@@ -1,0 +1,76 @@
+
+
+<siconv-fieldset fieldsetTitle="Termos Aditivos ao Instrumento Contratual {{contratoSelecionado.numero}}" [collapsible]="true">
+  <div class="form-row">
+    <div class="col-md-12">
+      <button *ngIf="permiteEdicao() && exibirBotaoAdicionar()" type="button" style="text-align: center;" class="btn btn-primary align-right"
+        [routerLink]="['../detalhar/cadastrar']">Adicionar</button>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-12">
+  
+    <siconv-table [data]="termosAditivos" fileExportName="termosAditivos" [pagination]="true"
+      [export]="export" (listaPaginada)="getListaPaginada($event)">
+      <thead header>
+        <tr>
+          <th sortable-column="numero" sortable-type="string" scope="col">Número</th>
+          <th sortable-column="situacao" sortable-type="string" scope="col">Tipo do Aditivo</th>
+          <!-- vai entrar depois, com a reprogramacao
+          <th sortable-column="valorAcrescimoSupressao" sortable-type="number" scope="col">Acréscimo / Supressão</th>
+          <th sortable-column="valorAtualizado" sortable-type="number" scope="col">Valor Total Atualizado</th>
+          <th sortable-column="valorReferente" sortable-type="number" scope="col">Valor Referente ao {{modalidade}}</th>
+          -->
+          <th sortable-column="dataFim" sortable-type="date" scope="col">Data de Fim de Vigência</th>
+          <th sortable-column="dataPublicacao" sortable-type="date" scope="col">Data de Publicação</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="termosAditivos">
+          <ng-container *ngFor="let termo of lista">
+            <tr>
+              <td><strong>{{termo.numero}}</strong></td>
+              <td><strong>{{termo.tipoTermoAditivo}} </strong></td>
+              <td>{{termo.novaDataFimVigencia | date: 'dd/MM/yyyy'}}</td>
+              <td>{{termo.dataPublicacao | date: 'dd/MM/yyyy'}}</td>
+              
+              
+              <td text-align="center">
+              
+                <a title="Detalhar" [routerLink]="['../detalhar/detalhar', termo.id]">
+                  <i class="fa fa-search fa-lg" aria-hidden="true"></i>
+                </a>
+                <a *ngIf="permiteEdicao()" 
+                    title="Editar"
+                    alt="Editar" [routerLink]="['../detalhar/editar', termo.id]">
+                  <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                </a>    
+                <a *ngIf="permiteEdicao()" 
+                   (click)="deleteTermoAditivo(termo, modalExcluir)" 
+                  title="Excluir" 
+                  alt="Excluir"
+                  aria-hidden="true">
+                  <i class="fa fa-trash fa-lg" style="color: #007bff;"></i>
+                </a>
+                
+              </td>
+            </tr>
+          </ng-container>
+      </tbody>
+    </siconv-table>
+    </div>
+  </div>
+</siconv-fieldset>
+
+<ng-template #modalExcluir>
+  <div class="modal-body text-center">
+    <p>Tem certeza que deseja excluir o Termo Aditivo '{{termoAditivoAExcluir?.numero}}'?</p>
+    <button type="button" class="btn btn-primary" (click)="confirmaExclusao()">Sim</button>
+    &nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-secondary" (click)="cancelaExclusao()">Não</button>
+  </div>
+</ng-template>
+
+<footer class="footer-botoes">  
+  <button type="button" class="btn btn-secondary " style="margin-left: 20px; margin-right: 5px;"  (click)="voltar()">Voltar</button>
+</footer>

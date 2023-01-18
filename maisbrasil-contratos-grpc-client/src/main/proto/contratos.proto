@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.gov.serpro.contratos.grpc";
+option java_outer_classname = "ContratosProto";
+
+package br.gov.serpro.contratos.grpc;
+
+message ListaFornecedoresRequest {
+	repeated string cnpj = 1;
+}
+ 
+message FornecedorContratos {
+	string cnpj = 1;
+	int32 qtd = 2;
+}
+
+message FornecedorContratosResponse {	
+	repeated FornecedorContratos map = 1; 
+}
+
+message FornecedorRequest {
+	string cnpj = 1;
+}
+
+message IdContratoRequest {
+	int64 idContrato = 1;
+}
+
+message ContratoDetalhado {
+	int64 id = 1;
+    string numero = 2;
+    string cnpjFornecedor = 3;
+    bool isTrabSocial = 4;
+    bool isAcompEventos = 5;
+    string dtInicioVigencia = 6;
+    string dtFimVigencia = 7; 
+    string dtAssinatura = 8;
+    string objeto = 9;
+    string valorTotal = 10; 
+    string valotTipoInstrumento = 11;
+    int64 idSiconv = 12; 
+    string localidade = 13;
+    int32 modalidade = 14;
+    int64 numeroTipoInstrumento = 15;
+    int64 anoTipoInstrumento = 16;
+    string objetoTipoInstrumento = 17;
+    string dtAssinaturaTipoInstrumento = 18;     
+    bool possuiInstituicaoMandataria = 19;
+    string nomeProponente = 20;  
+}
+
+message ListaContratosResponse {
+	repeated ContratoDetalhado contratos = 1;
+}
+
+message ContratoResponse {
+	ContratoDetalhado contrato = 1;
+}
+
+message Submeta {
+	int64 id = 1;
+	int64 idVRPL = 2;
+	string numero = 3;
+	string descricao = 4;
+	string valor = 5;
+	string situacao = 6;
+	string regimeExecucao = 7;
+}
+
+message ListaSubmetasResponse {
+	repeated Submeta submeta = 1;
+}
+
+message Lote {
+	int64 id = 1; 
+	string numero = 2;
+	repeated Submeta submetas = 3;
+}
+
+message Contrato {
+	int64 id = 1;
+	string numero = 2;
+	string cnpj = 3;
+	bool aptIniciar = 4;
+	bool isAcompEventos = 5;
+	repeated Lote lotes = 6; 
+}
+
+message Proposta {
+	int64 id =1; 
+	string numero = 2; 
+	string ano = 3;
+	string objeto = 4; 
+	string uf = 5; 
+	int64 idSiconv = 6; 
+	int32 modalidade = 7;
+	bool possuiInstituicaoMandataria = 8;
+	string nomeProponente = 9;
+	repeated Contrato contratos = 10;
+	//repeated Lote lotes = 11;
+			
+}
+
+message PropostaResponse {
+	Proposta proposta = 1;
+}
+
+message IdPropostaRequest {
+	int64 idProposta = 1;
+}
+
+message LicitacaoRequest{
+	int64 idSiconv = 1;
+	string numeroAnoLicitacao = 2;	
+}
+
+
+message NumeroContratoLicitacao{
+    string numeroContrato = 1;
+}
+
+message LicitacaoResponse{
+    repeated NumeroContratoLicitacao numeroContratoLicitacao = 1;
+}
+
+service Contratos {
+
+	rpc listaContratosLicitacao (LicitacaoRequest) returns (LicitacaoResponse);
+
+	rpc consultarContratosPorFornecedor (FornecedorRequest) returns (ListaContratosResponse);
+	
+	rpc consultarQTDContratos (ListaFornecedoresRequest) returns (FornecedorContratosResponse);
+	
+	rpc consultarContratoPorId (IdContratoRequest) returns (ContratoResponse);
+	
+	rpc consultarSubmetasPorIdContrato (IdContratoRequest) returns (ListaSubmetasResponse);	
+
+	rpc consultarPropostaPorId (IdPropostaRequest) returns (PropostaResponse);
+
+}

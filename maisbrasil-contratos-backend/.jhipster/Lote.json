@@ -1,0 +1,83 @@
+{
+    "name": "Lote",
+    "fields": [
+        {
+            "fieldName": "numero",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "versao",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "adtLogin",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 60
+        },
+        {
+            "fieldName": "adtDataHora",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "adtOperacao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 6
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "submeta",
+            "otherEntityRelationshipName": "lote",
+            "relationshipName": "submeta"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "contrato",
+            "otherEntityRelationshipName": "lote",
+            "relationshipName": "contrato",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "licitacao",
+            "otherEntityRelationshipName": "lote",
+            "relationshipName": "licitacao",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "fornecedor",
+            "otherEntityRelationshipName": "lote",
+            "relationshipName": "fornecedor",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20191029144840",
+    "entityTableName": "lote",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "maisbrasilContratosBackend",
+    "applications": "*",
+    "microserviceName": "maisbrasilContratosBackend"
+}

@@ -1,0 +1,79 @@
+import { Component, OnInit } from '@angular/core';
+import { BaseComponent } from '../../../maisbrasil/util/base.component';
+import { AppConfig } from '../../../core/app.config';
+import { User } from '@serpro/ngx-siconv';
+import { Store } from '@ngxs/store';
+import { SiconvLegacyService } from '../../../model/siconv/siconv-legacy.service';
+import { UserAuthorizerService } from '../../../model/user/user-authorizer.service';
+
+@Component({
+  selector: 'app-proposta-nao-encontrada',
+  templateUrl: './proposta-nao-encontrada.component.html'
+})
+export class PropostaNaoEncontradaComponent extends BaseComponent {
+
+  public link = AppConfig.urlToSICONVService;
+
+  menuLoaded = false;
+  menu: any;
+  usuario: User;
+
+  constructor(
+    protected store: Store,
+    private service: SiconvLegacyService,
+    private authorizer: UserAuthorizerService) {
+    super(store);
+  }
+
+  init() {
+    this.getUsuario();
+    this.recuperarMenu();
+  }
+
+  getUsuario() {
+    this.usuario = new User(this.authorizer.user.name);
+  }
+
+  getPasswordUrl() {
+    return AppConfig.urlToSICONVService + '/siconv/secure/TrocaDeSenhaObrigatoriaProcessar.do?menu=true';
+  }
+
+  getProfileUrl() {
+    return AppConfig.urlToSICONVService + '/siconv/participe/AtualizarDadosUsuario/AtualizarDadosUsuario.do';
+  }
+
+  sessionTimeFeedback(sessionTime) {
+    if (sessionTime === 'expired') {
+      const initialState = {
+        msg: 'A sessão encerrou. Será preciso logar novamente.',
+        logout: true
+      };
+
+    }
+    if (sessionTime === 'warning') {
+      const initialState = {
+        msg: 'Esta sessão irá se encerrar em menos 3 minutos! Salve o seu trabalho para evitar perdas.',
+        logout: false
+      };
+    }
+  }
+
+  logoutFeedback(logout) {
+    const initialState = {
+      msg: 'A sessão encerrou. Será preciso logar novamente.',
+      logout: true
+    };
+    window.location.href = AppConfig.urlToSICONVService + '?LLO=true';
+  }
+
+  recuperarMenu() {
+    this.service.getMenu().subscribe(
+      (values: any) => {
+        this.menuLoaded = true;
+        this.menu = values;
+      }
+    );
+  }
+
+
+}

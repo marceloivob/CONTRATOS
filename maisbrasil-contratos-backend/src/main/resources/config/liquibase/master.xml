@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <property name="now" value="now()" dbms="h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle, mssql, mariadb"/>
+    <property name="clobType" value="longvarchar" dbms="h2"/>
+    <property name="clobType" value="clob" dbms="mysql, oracle, mssql, mariadb, postgresql"/>
+    <property name="uuidType" value="uuid" dbms="h2, postgresql"/>
+	
+	<include file="config/liquibase/changelog/20191220180433_to_sql.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/20200115143559_add_columns.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/20200122155005_alter_contrato_historico.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/20200207084530_ajuste_trigger_validacoes_datas.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/mvp2/aio.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/20200220165545_alter_historico_data_type.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/20200304104215_tabela_execucao_batch_aio.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/20200402145300_drop_validacoes_data.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/20200626165000_alterar_licitacao.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/termo_de_compromisso/termo_de_compromisso.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/hotfix/20220615174000_demanda3264478.xml" relativeToChangelogFile="false"/>
+	<include file="config/liquibase/changelog/termo_aditivo/termo_aditivo.xml" relativeToChangelogFile="false"/>
+	
+	<!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    
+    <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
+</databaseChangeLog>

@@ -1,0 +1,190 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+logging:
+  level:
+    ROOT: DEBUG
+    io.github.jhipster: DEBUG
+    br.gov.economia.maisbrasil.contratos: DEBUG
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: TRACE
+    
+vrpl:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://10.31.0.134:5432/dbdes_mandatarias_desenv
+    username: owner_siconv_p
+    password: owner_siconv_p
+    driver-class-name: org.postgresql.Driver
+    auto-commit: false
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+spring:
+  profiles:
+    active: dev
+    include:
+      - swagger
+      # Uncomment to activate TLS for the dev profile
+      #- tls
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false # we use Webpack dev server + BrowserSync for livereload
+  jackson:
+    serialization:
+      indent-output: true
+  datasource:  #Datasource default https://stackoverflow.com/questions/46965253/jhipster-configure-multiple-datasources
+    contratos:
+      name: contratos
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:postgresql://localhost:5435/db-maisbrasil-contratos
+      #url: jdbc:postgresql://10.31.0.134:5432/dbdes_mandatarias_desenv #Rodar local apontando pro banco de desenv. *** LEMBRAR DE DESLIGAR O LIQUIBASE ***
+      username: owner_siconv_p
+      password: owner_siconv_p
+      auto-commit: false
+      hikari:
+        poolName: Hikari
+        auto-commit: false
+  liquibase:
+    # Remove 'faker' if you do not want the sample data to be loaded automatically
+    contexts: modelo_inicial, mvp02_checklist, mvp02_add_column_submeta, mvp02_alteracoes, termo_de_compromisso, hotfix, termo_aditivo
+    default-schema: contratos
+    liquibase-schema: contratos
+    enabled: false
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
+  messages:
+    cache-duration: PT1S # 1 second, see the ISO 8601 standard
+  thymeleaf:
+    cache: false
+  sleuth:
+    sampler:
+      probability: 1 # report 100% of traces
+  zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
+    base-url: http://localhost:9411
+    enabled: false
+    locator:
+      discovery:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+  # CORS is disabled by default on microservices, as you should access them through a gateway.
+  # If you want to enable it, please uncomment the configuration below.
+  #cors:
+  #  allowed-origins: "*"
+  #  allowed-methods: "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+  #  allowed-headers: "origin,content-type,accept,authorization"
+  #  exposed-headers: "Authorization,Link,X-Total-Count"
+  #  allow-credentials: true
+  #  max-age: 1800
+  security:
+    authentication:
+      jwt:
+        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+        base64-secret: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoIVolQydZAWYFnRwluqCNx8mkJ4g+XJmDWFnYwT6uX8PpUd3GGET9orNWQPDyX8iO32pasAWK2JjLFr2jm0+zjhvgTywGbHv5s/io7XeGtn5RrK9o5pdD4OFccvQKElmyQIROFNscNl2Ov53JN6J8aSGCBFWpFuM21jNV/bxx24zAM6AKJGtjQcRwgMiV/FWEzCBDybQ68LzqCDXaxbdPukUnEb5k/N5S9SQqkG+5FMPKwVvpaOXIyA3qyL5ipyNYX8KFa3ZKsPTyYmDqN3296g5unffd8f+r2r4AdrtazkTXlzoHLOh/v2GORw8N73DvFtqjYKWX3bHP/wDPXSTwQIDAQAB
+        # Token is valid 24 hours
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
+  mail: # specific JHipster mail property, for standard properties see MailProperties
+    base-url: http://127.0.0.1:8080
+  metrics:
+    logs: # Reports metrics in the logs
+      enabled: false
+      report-frequency: 60 # in seconds
+  logging:
+    use-json-format: false # By default, logs are not in Json format
+    logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+      enabled: false
+      host: localhost
+      port: 5000
+      queue-size: 512
+  audit-events:
+    retention-period: 30 # Number of days before audit events are deleted.
+
+maisbrasil:
+  contratos:
+    inativar-emissao-aio-periodo-eleitoral: ${CONTRATOS_INATIVAR_EMISSAO_AIO_PERIODO_ELEITORAL:false}
+    integracao:
+      idp:
+        uri-base: https://10.139.67.54:8443/idp/
+      siconv:
+        uri-base: https://10.139.67.53:8443/voluntarias/
+  medicao:
+    url: nodes.estaleiro.serpro
+    porta: 32744 
+  cadastro:
+    url: nodes.estaleiro.serpro
+    porta: 31124
+
+integrations:
+   PRIVATE:
+      CEPH:
+         bucket: contratos-local
+         endpoint: https://storagegw.estaleiro.serpro.gov.br
+         accessToken: 9ecb12d0d2b74a0e9d83c0a4cd6a1813
+         secretKey: 83f662f155dd46b195f38feb37e7d878
+         region: undefined
+         maxFileSizeInMB: 10
+         useSSL: false
+      MAIL:
+         from: plataformamaisbrasil@economia.gov.br
+         remote-host: mail-apl.serpro.gov.br
+         remote-port: 25
+      GRPC:
+         CPS:
+            endpoint: nodes.estaleiro.serpro
+            port: 30082
+            useSSL: false
+         SICONV:
+            endpoint: nodes.estaleiro.serpro
+            port: 32424
+            useSSL: false
+         VRPL:
+            endpoint: nodes.estaleiro.serpro
+            port: 32127
+            useSSL: false
+      REST:
+         SICONV:
+            endpoint: https://10.139.67.53:8443/voluntarias/
+            secretKey: aW50ZWdyYWNhb192cnBsX3NpY29udg==
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# application:

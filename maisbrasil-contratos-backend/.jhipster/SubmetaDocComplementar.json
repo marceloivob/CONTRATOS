@@ -1,0 +1,35 @@
+{
+    "name": "SubmetaDocComplementar",
+    "fields": [
+        {
+            "fieldName": "dataAssociacao",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "submeta",
+            "otherEntityRelationshipName": "submetaDocComplementar",
+            "relationshipName": "submeta",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "docComplementar",
+            "otherEntityRelationshipName": "submetaDocComplementar",
+            "relationshipName": "docComplementar",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20191029144836",
+    "entityTableName": "submeta_doc_complementar",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "maisbrasilContratosBackend",
+    "applications": "*",
+    "microserviceName": "maisbrasilContratosBackend"
+}

@@ -1,0 +1,113 @@
+<ng-container *ngIf="propostaObservable | async as proposta">
+  <siconv-fieldset fieldsetTitle={{tituloDaTela}} [collapsible]="true" [collapsed]="false">
+  <div class="form-row">
+    <div class="col-md-6">
+      <label for="numeroProposta">Número da Proposta</label>
+      <p class="informacao" id="numeroProposta">{{proposta.numeroProposta}}/{{proposta.anoProposta}}</p>
+    </div>
+    <div class="col-md-6">
+      <label for="numeroConvenioContratoRepasse">{{labelNumeroConvenio}}</label>
+      <p class="informacao" id="numeroConvenioContratoRepasse">
+        {{proposta.numeroConvenio}}/{{proposta.anoConvenio}}</p>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-12">
+      <label for="programa">Programa</label>
+      <p class="informacao" id="programa">{{proposta.codigoPrograma}} - {{proposta.nomePrograma}}</p>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-12">
+      <label for="objeto">Objeto</label>
+      <p class="informacao" id="objeto">{{proposta.nomeObjeto}}</p>
+    </div>
+  </div>
+  </siconv-fieldset>
+</ng-container>
+
+
+
+<siconv-fieldset fieldsetTitle="Instrumentos Contratuais" [collapsible]="true">
+  <div class="form-row">
+    <div class="col-md-12">
+      <button *ngIf="isProponente()" type="button" style="text-align: center;" class="btn btn-primary align-right"
+        [routerLink]="['../detalhar/cadastrar']">Adicionar</button>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-12">
+    <siconv-table [data]="instrumentosContratuais" fileExportName="instrumentosContratuais" [pagination]="true"
+      [export]="export" (listaPaginada)="getListaPaginada($event)">
+      <thead header>
+        <tr>
+          <th sortable-column="numero" sortable-type="string" scope="col">Nº do Instrumento Contratual</th>
+          <th sortable-column="situacao" sortable-type="string" scope="col">Situação</th>
+          <th sortable-column="valorTotal" sortable-type="number" scope="col">Valor Total</th>
+          <th sortable-column="valorReferente" sortable-type="number" scope="col">Valor Referente ao {{modalidade}}</th>
+          <th sortable-column="dataInicio" sortable-type="date" scope="col">Data de Início de Vigência</th>
+          <th sortable-column="dataFim" sortable-type="date" scope="col">Data de Fim de Vigência</th>
+          <th scope="col">Ações</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="instrumentosContratuais">
+          <ng-container *ngFor="let contrato of instrumentosContratuais">
+            <tr>
+              <td><strong>{{contrato.numero}}</strong></td>
+              <td><strong>{{contrato.inSituacaoExibicaoDescricao}} </strong></td>
+              <td><strong>{{contrato.valorTotal | currency: 'BRL'}}</strong></td>
+              <td><strong>{{contrato.valorReferenteModalidade | currency: 'BRL'}}</strong></td> 
+              <td>{{contrato.inicioVigencia | date: 'dd/MM/yyyy'}}</td>
+              <td>{{contrato.fimVigencia | date: 'dd/MM/yyyy'}}</td>
+              
+              <td text-align="center">
+                <a title="Detalhar" [routerLink]="['../detalhar/detalhar', contrato.id]">
+                  <i class="fa fa-search fa-lg" aria-hidden="true"></i>
+                </a>
+
+                <a *ngIf="isProponente() && !permissaoIndisponivel(contrato.permissaoAlteracao)" 
+                    title="Editar"
+                    alt="Editar" [routerLink]="['../detalhar/editar', contrato.id]">
+                  <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                </a>
+                <a *ngIf="isProponente() && permissaoIndisponivel(contrato.permissaoAlteracao)" 
+                    title="Serviço Indisponível. Erro ao tentar consultar dados do módulo de Acompanhamento de Obras e Serviços de Engenharia da Plataforma +Brasil. Favor tentar novamente mais tarde."
+                    alt="Serviço Indisponível. Erro ao tentar consultar dados do módulo de Acompanhamento de Obras e Serviços de Engenharia da Plataforma +Brasil. Favor tentar novamente mais tarde.">
+                  <i class="fa fa-pencil fa-lg" style="color: gray;"></i>
+                </a>
+
+                <a *ngIf="isProponente() && permissaoTotal(contrato.permissaoAlteracao)" 
+                   (click)="deleteContrato(contrato, modalExcluir)" 
+                  title="Excluir" 
+                  alt="Excluir"
+                  aria-hidden="true">
+                  <i class="fa fa-trash fa-lg" style="color: #007bff;"></i>
+                </a>
+                <a *ngIf="isProponente() && permissaoIndisponivel(contrato.permissaoAlteracao)"  
+                  title="Serviço Indisponível. Erro ao tentar consultar dados do módulo de Acompanhamento de Obras e Serviços de Engenharia da Plataforma +Brasil. Favor tentar novamente mais tarde." 
+                  alt="Serviço Indisponível. Erro ao tentar consultar dados do módulo de Acompanhamento de Obras e Serviços de Engenharia da Plataforma +Brasil. Favor tentar novamente mais tarde." >
+                  <i class="fa fa-trash fa-lg" style="color: gray;"></i>
+                </a>
+                <a *ngIf="isProponente() && !permissaoTotal(contrato.permissaoAlteracao) && !permissaoIndisponivel(contrato.permissaoAlteracao)"  
+                  title="Não é possível excluir este instrumento contratual, pois já existem informações referente a este instrumento contratual que foram inseridas no módulo de Acompanhamento de Obras e Serviços de Engenharia da Plataforma +Brasil." 
+                  alt="Não é possível excluir este instrumento contratual, pois já existem informações referente a este instrumento contratual que foram inseridas no módulo de Acompanhamento de Obras e Serviços de Engenharia da Plataforma +Brasil." >
+                  <i class="fa fa-trash fa-lg" style="color: gray;"></i>
+                </a>
+
+              </td>
+            </tr>
+          </ng-container>
+      </tbody>
+    </siconv-table>
+    </div>
+  </div>
+</siconv-fieldset>
+
+<ng-template #modalExcluir>
+  <div class="modal-body text-center">
+    <p>Tem certeza que deseja excluir o Instrumento Contratual '{{contratoAExcluir?.numero}}'?</p>
+    <button type="button" class="btn btn-primary" (click)="confirmaExclusao()">Sim</button>
+    &nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-secondary" (click)="cancelaExclusao()">Não</button>
+  </div>
+</ng-template>

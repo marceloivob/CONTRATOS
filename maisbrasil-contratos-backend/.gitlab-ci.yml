@@ -1,0 +1,146 @@
+include:
+  - remote: 'https://git.serpro/devops/automacao/gitlab-ci/raw/master/.coleta.yml'
+  - remote: 'https://git.serpro/devops/automacao/gitlab-ci/raw/master/.dependency-track.yml'
+
+variables:
+  VERSION: p$CI_PIPELINE_ID-c$CI_COMMIT_SHORT_SHA
+  URI_ENDPOINT: https://console.estaleiro.serpro.gov.br
+  TOKEN: $TOKEN
+  SYSTEM: siconv # Sistema cadastrado no portal
+  MODULE: maisbrasil-contratos-backend # Módulo criado no portal
+  PLATFORM: java:11-adoptopenjdk-debian # ${PLATAFORM} # Plataforma da aplicação
+  ENVIRONMENT_DESENV: d # Ambiente criado no portal
+  ENVIRONMENT_TESTE: t # Ambiente criado no portal
+  ENVIRONMENT_HOMOLOGACAO: h # Ambiente criado no portal
+  ENVIRONMENT_PRODUCAO: p # Ambiente criado no portal
+  ENVIRONMENT_TREINAMENTO: tre # Ambiente criado no portal
+  ENVIRONMENT_VALIDACAO: v # Ambiente criado no portal
+  MAVEN_CLI_OPTS: "-Dmaven.repo.local=/.m2 --batch-mode --errors --no-transfer-progress --fail-at-end --show-version"
+  GIT_SSL_NO_VERIFY: "true"
+
+.config_cli_estaleiro: &config_cli_estaleiro
+  image: hub.estaleiro.serpro/pipeline/cliente-estaleiro:latest
+  before_script:    
+
+    - estaleiro config token --literal $TOKEN
+    - estaleiro config endpoint $URI_ENDPOINT
+    - estaleiro config system siconv
+
+stages:
+    - prepare
+    - Build:Compilação
+    - Estaleiro:Construção da Imagem
+    - Deploy-DESENV
+    - Deploy
+
+# stage "prepare"
+coleta:
+  extends: .coleta
+
+Build:Compilação:
+  before_script:
+    - echo $CI_BUILD_ID
+    - echo $VERSION
+    - echo $CI_PROJECT_URL 
+  image: hub.estaleiro.serpro/pipeline/maven:3-jdk-11-slim
+  stage: Build:Compilação
+  script:
+    - echo "Atualizando a versão do Projeto..."
+    - mvn ${MAVEN_CLI_OPTS} versions:set -DnewVersion=$VERSION  
+    - echo "Compilando..."
+    - ./mvnw ${MAVEN_CLI_OPTS} -Pprod clean verify
+  cache:
+    paths:
+      - /.m2
+  artifacts:
+    paths:
+      - target/
+      - target/maisbrasil-contratos-backend.jar 
+      - Docker/Procfile 
+      - src/
+      - target/surefire-reports/
+      - target/failsafe-reports/
+      - target/test-classes/
+      - sonar-project.properties
+
+Estaleiro:Construção da Imagem:
+  stage: Estaleiro:Construção da Imagem
+  image: cliente-estaleiro:latest
+  <<: *config_cli_estaleiro
+  script:
+    - echo $VERSION
+    - echo "Construindo e publicando a imagem para o Estaleiro..."
+    - ls
+    - mv Docker/Procfile .
+    - mv target/maisbrasil-contratos-backend.jar .
+    - estaleiro app build --module $MODULE --platform $PLATFORM --version $VERSION
+  dependencies:
+    - Build:Compilação
+  variables:
+    GIT_STRATEGY: none
+
+Build:Análise de Qualidade de Código:
+  stage: Deploy-DESENV
+  image: hub.estaleiro.serpro/pipeline/sonar-scanner:latest
+  script:
+    - sonar-scanner -Dsonar.projectVersion=$VERSION -Dsonar.links.scm=$CI_PROJECT_URL 
+  allow_failure: true
+  dependencies:
+    - Build:Compilação
+  variables:
+    GIT_STRATEGY: none
+
+Dependency-Track:
+  extends: .dependency-track-maven-plugin-3-jdk-11
+  stage: Deploy-DESENV
+  image: hub.estaleiro.serpro/pipeline/maven:3-jdk-11-slim
+  allow_failure: true
+  dependencies:
+    - Build:Compilação
+  when: on_success
+
+Estaleiro:Publicação DESENV:
+  stage: Deploy-DESENV
+  image: cliente-estaleiro:latest
+  <<: *config_cli_estaleiro
+  script:
+    - echo "Promoção da Build para o Ambiente de Desenvolvimento"
+    - echo "estaleiro app promote mod $ENVIRONMENT_DESENV --module $MODULE --version $VERSION"
+    - estaleiro app promote mod $ENVIRONMENT_DESENV --module $MODULE --version $VERSION
+  when: manual
+  dependencies:
+    - Build:Compilação
+  variables:
+    GIT_STRATEGY: none
+
+
+
+Estaleiro:Publicação HOM:
+ stage: Deploy
+ image: cliente-estaleiro:latest
+ <<: *config_cli_estaleiro
+ script:
+    - echo "Promoção da Build para o Ambiente de Homologação"
+    - echo "estaleiro app promote mod $ENVIRONMENT_HOMOLOGACAO --module $MODULE --version $VERSION"
+    - estaleiro app promote mod $ENVIRONMENT_HOMOLOGACAO --module $MODULE --version $VERSION
+ when: manual
+ dependencies:
+    - Build:Compilação
+ variables:
+    GIT_STRATEGY: none
+
+Estaleiro:Publicação PROD:
+ stage: Deploy
+ image: cliente-estaleiro:latest
+ <<: *config_cli_estaleiro
+ script:
+    - echo "Promoção da Build para o Ambiente de Produção"
+    - echo "estaleiro app promote mod $ENVIRONMENT_PRODUCAO --module $MODULE --version $VERSION"
+    - estaleiro app promote mod $ENVIRONMENT_PRODUCAO --module $MODULE --version $VERSION
+ when: manual
+ dependencies:
+    - Build:Compilação
+ variables:
+    GIT_STRATEGY: none
+
+

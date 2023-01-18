@@ -1,0 +1,239 @@
+entity Contrato {
+    numero String required maxlength(20)
+    objeto String required maxlength(5000)
+    dataAssinatura LocalDate required
+    dataPublicacao LocalDate required
+    inicioVigencia LocalDate required
+    fimVigencia LocalDate required
+    valorTotal BigDecimal required
+    inSituacao String required maxlength(10)
+    aptoAIniciar Boolean required
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+entity Anexo {
+	txDescricao String required maxlength(100)
+    inTipoAnexo String required maxlength(30)
+    dtUpload LocalDate required
+    idCpfEnviadoPor String required  maxlength(11)
+    nomeEnviadoPor String required  maxlength(60)
+    inPerfilUsuario String required maxlength(10)
+    nmArquivo String required maxlength(100)
+    caminho String required maxlength(1024)
+    bucket String required maxlength(25)
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+relationship OneToMany {
+  Contrato to Anexo
+}
+
+entity Historico {
+	situacaoContrato String required maxlength(3)
+    eventoGerador String required maxlength(3)
+    nomeResponsavel String required maxlength(60)
+    cpfResponsavel String required maxlength(11)
+    dataRegistro LocalDate required
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+relationship OneToMany {
+  Contrato to Historico
+}
+
+relationship OneToMany {
+  Proposta to Contrato
+}
+
+entity TermoAditivo {
+	inTipoDeAditivo String required maxlength(3) // ACR Acrescimo ou SUP Supressao
+    inAlteracaoVigencia Boolean required
+    inAlteracaoClausula Boolean required
+    inAlteracaoObjeto Boolean required
+    numero String required maxlength(20)
+    dataAssinatura LocalDate required
+    dataPublicacao LocalDate required
+    valorAcrescimo BigDecimal required
+    valorSupressao BigDecimal required
+    novaDataFimVigencia LocalDate required
+    justificativa String required maxlength(1000)
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+relationship OneToMany {
+  Contrato to TermoAditivo
+}
+
+relationship OneToMany {
+  TermoAditivo to Anexo
+}
+
+entity DocComplementar{
+	numeroDocumento String required maxlength(40)
+    orgaoEmissor String required maxlength(100)
+    dataEmissao LocalDate required
+    dataValidade LocalDate required
+    tipo String required maxlength(50)
+    tipoManifestoAmbiental String maxlength(50)
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+relationship OneToMany {
+  Anexo to DocComplementar
+}
+
+entity SubmetaDocComplementar {
+	dataAssociacao LocalDate
+}
+
+relationship OneToMany {
+  Submeta to SubmetaDocComplementar
+}
+
+relationship OneToMany {
+  DocComplementar to SubmetaDocComplementar
+}
+
+
+relationship OneToMany {
+	Contrato to Lote
+}
+
+entity Proposta {
+	idSiconv Integer required
+	numeroProposta Integer required
+	anoProposta Integer required
+	valorGlobal BigDecimal required
+	valorRepasse BigDecimal required
+	valorContrapartida BigDecimal required
+	modalidade Integer required
+	nomeObjeto String maxlength(5000)
+	numeroConvenio Integer
+	anoConvenio Integer
+	dataAssinaturaConvenio LocalDate
+	codigoPrograma String required maxlength(13)
+	nomePrograma String required maxlength(255)
+	identificacaoProponente String maxlength(1024)
+	nomeProponente String maxlength(1024)
+	uf String  required maxlength(2)
+	pcMinContrapartida BigDecimal
+	nomeMandataria String maxlength(1024)
+    //categoria define se eh obra ou nao-obra
+	categoria String required maxlength(50)
+	nivelContrato String maxlength(20)
+	spaHomologado Boolean required
+	apelidoEmpreendimento String required maxlength(50)
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+entity Licitacao {
+	numeroAno String required maxlength(1024)
+	objeto String required maxlength(1024)
+	valorProcesso BigDecimal required
+	statusProcesso String required maxlength(20)
+	idLicitacaoFk Integer required 
+	inSituacao String required maxlength(3)
+	modalidade String maxlength(50)
+	regimeContratacao String maxlength(1024)
+	dataPublicacao LocalDate
+	dataHomologacao LocalDate
+	processoDeExecucao String maxlength(50)
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+relationship OneToMany {
+  Proposta to Licitacao
+}
+
+entity Submeta {
+    numero Integer required
+	vlRepasse BigDecimal required
+	vlOutros BigDecimal required
+	inRegimeExecucao String required maxlength(3)
+	vlContrapartida BigDecimal required
+	vlTotalLicitado BigDecimal required
+	inSituacao String required maxlength(3)
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+entity Lote {
+	numero Integer required
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+entity Fornecedor {
+	razaoSocial String required maxlength(150)
+	tipoIdentificacao String required maxlength(4)
+	identificacao String required maxlength(20)
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+
+
+entity Meta {
+	idMetaVRPL Integer required
+    txDescricao String required maxlength(100)
+    numero Integer required
+    qtItens BigDecimal required
+    inSocial Boolean required
+    versao BigDecimal required
+    adtLogin String required maxlength(60)
+    adtDataHora LocalDate required
+    adtOperacao String required maxlength(6)
+}
+
+relationship OneToMany {
+  Meta to Submeta
+}
+
+relationship OneToMany {
+  Proposta to Submeta
+}
+
+relationship OneToMany {
+  Lote to Submeta
+}
+
+relationship OneToMany {
+  Licitacao to Lote
+}
+
+
+relationship OneToMany {
+  Fornecedor to Lote
+}
+
+
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

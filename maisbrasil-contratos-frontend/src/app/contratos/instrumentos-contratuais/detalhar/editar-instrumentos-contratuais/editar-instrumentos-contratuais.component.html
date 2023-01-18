@@ -1,0 +1,272 @@
+<siconv-fieldset fieldsetTitle="Dados Gerais"  [collapsible]="true">
+  <form *ngIf="contratoEdicao" [formGroup]="contratoForm" (ngSubmit)="submit()">
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label>Nº do Instrumento Contratual</label>
+        <input *ngIf="!isEdicaoParcial" class="form-control" formControlName="numero" [ngClass]="{ 'is-invalid': showError('numero') }"
+          min="0" maxlength="20" required=true >
+          <div *ngIf="showError('numero')" class="invalid-feedback">
+              <div *ngIf="field('numero').errors.required">O campo é de preenchimento obrigatório.</div>
+          </div>
+        <input *ngIf="isEdicaoParcial" class="form-control" formControlName="numero" [ngClass]="{ 'is-invalid': showError('numero') }"
+          min="0" maxlength="20" required=true disabled=true>
+          
+
+        </div>
+      <div class="form-group col-md-9">
+        <label>Situação</label>
+        <p>{{contratoEdicao.inSituacaoExibicaoDescricao}}</p>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-12">
+        <label>Objeto</label>
+        <textarea rows="4" cols="100" maxlength="5000" class="form-control" formControlName="objeto"
+        (keyup)="calcularCaracteresRestantesTxObjeto()" [ngClass]="{ 'is-invalid': showError('objeto') }"></textarea>
+        <p *ngIf="!showError('objeto') && !visualizar">{{caracteresRestantesTxObjeto}} caracteres restantes</p>
+        <div *ngIf="showError('objeto')" class="invalid-feedback">
+            <div *ngIf="field('objeto').errors.required">O campo é de preenchimento obrigatório.</div>
+        </div>
+    
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col-md-3" >
+        <siconv-date-picker
+          label="Data de Assinatura"
+          name="dataAssinatura"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataAssinatura"
+          [siconvHasError]="datePicker"
+          >
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataAssinatura') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <siconv-date-picker
+          label="Data de Publicação"
+          name="dataPublicacao"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataPublicacao">
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataPublicacao') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+
+      </div>
+      <div class="col-md-3">
+        <siconv-date-picker
+          label="Data de Início de Vigência"
+          name="dataInicioVigencia"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataInicioVigencia"
+          >
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataInicioVigencia') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+
+      </div>
+      <div class="col-md-3" *ngIf="!exibirVigenciaOriginal">
+        <siconv-date-picker
+          label="Data de Fim de Vigência"
+          name="dataFimVigencia"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataFimVigencia">
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataFimVigencia') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+      </div>
+
+      <div class="col-md-3" *ngIf="exibirVigenciaOriginal">
+        <siconv-date-picker
+          label="Data de Fim de Vigência (Atualizado por Termo Aditivo)"
+          name="dataFimVigencia"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataFimVigencia">
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataFimVigencia') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label>Valor Total</label>
+        <input appContratosCurrencyFormatter class="form-control" formControlName="valorTotal" (keypress)="numberOnly($event)">
+        <h5 *ngIf="showError('valorTotal')" style="font-size: 70%; color: #dc3545;">
+          O campo é de preenchimento obrigatório.
+        </h5>
+      </div>
+      <div class="form-group col-md-9">
+        <label>Valor Referente ao {{modalidadeInstrumento}}</label>
+        <p *ngIf=exibirValorTotalSubmetas>{{lotes.somaValoresSubmetasAssociadasLotes | currency:'BRL':'symbol'}}</p>
+      </div>
+    </div>
+
+    <siconv-fieldset fieldsetTitle="Data de Fim de Vigência Original"  *ngIf="exibirVigenciaOriginal" [collapsible]="true">
+      <div class="form-row">
+        <div class="col-md-3" >
+          <p>{{vigenciaOriginal}}</p>
+        </div>
+      </div>
+    </siconv-fieldset>
+    
+  </form>
+</siconv-fieldset>
+
+
+<siconv-fieldset fieldsetTitle="Empresa Executora e Processo Licitatório"  [collapsible]="true">
+    <div class="form-row">
+      <div class="col-md-12" >
+        <label for="selectFornecedor">Empresa Executora</label>
+        <div *ngIf=!visualizarCombo>
+          <ng-select
+              [ngStyle]="{ 'border': corDaBordaComboFornecedor }"
+              notFoundText="Nenhum elemento encontrado"
+              id="selectFornecedor"
+              [items]="fornecedoresLabel"
+              [(ngModel)]="fornecedorSelecionado"
+              (change)="fornecedorSelecionadoChanged($event)"
+              [disabled]="visualizarCombo"
+              >
+          </ng-select>
+          <div [ngStyle]="{ display: erroFornecedor? 'block' : 'none' }" class="invalid-feedback">
+            <div>O campo é de preenchimento obrigatório.</div>
+          </div>
+        </div>
+        <div  *ngIf=visualizarCombo>
+          <input [value]="fornecedorSelecionadoLabel" disabled class="col-md-12" class="form-control">
+        </div>
+  
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-4">
+        <label for="selectProcesso">Processo Licitatório</label>
+        <div *ngIf=!visualizarCombo>
+          <ng-select
+              [ngStyle]="{ 'border': corDaBordaComboLicitacao }"
+              notFoundText="Nenhum elemento encontrado"
+              id="selectProcesso"
+              [items]="licitacoesLabel"
+              [(ngModel)]="licitacaoSelecionada"
+              (change)="licitacaoSelecionadaChanged($event)"
+              [disabled]="visualizarCombo"
+              >
+          </ng-select>
+          <div [ngStyle]="{ display: erroLicitacao ? 'block' : 'none' }" class="invalid-feedback">
+            <div>O campo é de preenchimento obrigatório.</div>
+          </div>
+        </div>
+        <div  *ngIf=visualizarCombo>
+          <input [value]="licitacaoSelecionadaLabel" disabled class="col-md-4" class="form-control">
+        </div>
+
+        <div [ngStyle]="{ display: exibirMensagemSemLotesDisponiveis ? 'block' : 'none' }" class="invalid-feedback">
+            <div>Não há lotes disponíveis para seleção, pois os lotes associados a empresa executora e processo licitatório escolhidos já foram vinculados em outro instrumento contratual cadastrado.</div>
+        </div>
+      </div>
+      <div class="col-md-8">
+          <label for="objetoContrato">Objeto do Processo Licitatório</label>
+          <p *ngIf="licitacaoSelecionada" class="informacao" id="objetoContrato">{{licitacaoSelecionada?.objeto}}</p>
+        </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-4">
+        <label for="objetoContrato">Número do Processo Interno do Ente</label>
+        <p *ngIf="licitacaoSelecionada" class="informacao" id="numeroProcessoInterno">{{licitacaoSelecionada?.numeroProcesso}}</p>
+      </div>
+      <div  *ngIf="exibirModalidadeLicitacao" class="col-md-8">
+          <label for="objetoContrato">Modalidade da Licitação</label>
+          <p class="informacao" id="modalidadeLicitacao">{{licitacaoSelecionada?.modalidade}}</p>
+        </div>
+    </div>
+</siconv-fieldset>
+
+<siconv-fieldset fieldsetTitle="Lotes e Submetas"  [collapsible]="true">
+  <div class="form-group">
+    <div class="form-row">
+      <div class="col-md-6">
+        <siconv-picklist *ngIf="lotes"
+        (changed)="lotes.onLotesChanged($event)"
+        [sources]="lotes.source"
+        [targets]="lotes.target"
+        [disabled]="visualizar || isEdicaoParcial"
+        [sourceLabel]="labelLotesAssociar"
+        [targetLabel]="labelLotesAssociados"
+        >
+        </siconv-picklist>
+        <div [ngStyle]="{ display: exibirMensagemErroSemLotes ? 'block' : 'none' }" class="invalid-feedback">
+          <div>O campo é de preenchimento obrigatório.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <siconv-table *ngIf="lotes">
+    <thead header>
+      <tr>
+        <th scope="col">Lote</th>
+        <th scope="col">Meta</th>
+        <th scope="col">Submeta</th>
+        <th scope="col">Valor</th>
+    </thead>
+    <tbody >
+      <ng-container *ngFor="let lote of lotes.selecionados">
+        <tr *ngFor="let submeta of lote.submetas; let subIndex = index">
+            <td [attr.rowspan]="lote.submetas.length" *ngIf="subIndex == 0">
+              {{lote.numero}}
+            </td>
+            <td [attr.rowspan]="lote.submetas.length" *ngIf="subIndex == 0">
+              {{submeta.descricaoMeta}}
+            </td>
+            <td>{{submeta.descricaoDetalhada}}</td>
+            <td>{{submeta.vlTotalLicitado | currency:'BRL':'symbol':'1.2-2'}}</td>
+          </tr>
+      </ng-container>
+    </tbody>
+    <tfoot style="background: none repeat scroll 0 0 #EEEFF1; font-weight: bold; text-align: left;">
+        <tr *ngIf=exibirValorTotalSubmetas>
+          <td colspan="3" style="text-align: right;">Total</td>
+          <td style="text-align: left;">{{lotes.somaValoresSubmetasAssociadasLotes | currency:'BRL':'symbol':'1.2-2'}}</td>
+        </tr>
+      </tfoot>
+  </siconv-table>
+</siconv-fieldset>
+
+<siconv-fieldset *ngIf="exibirAnexos" fieldsetTitle="Anexos" [collapsible]="true">
+  <app-anexo (changed)="onAnexosChanged()"
+  tiposDoAnexo="INSTRUMENTO_CONTRATUAL;PUBLICACAO_EXTRATO;OUTROS"
+  nomesTiposAnexo="Instrumento Contratual;Publicação do Extrato do Instrumento Contratual;Outros"
+  [anexos]="anexosObservable"
+  [contrato]="contratoEdicao"
+  [visualizar]="visualizar"
+  [isTermoAditivo]=false>
+  </app-anexo>
+</siconv-fieldset>
+
+<siconv-fieldset *ngIf="!exibirAnexos" fieldsetTitle="Anexos" [collapsible]="true">
+  <app-contrato-anexo (setAnexos)="setAnexos($event)"
+  tiposDoAnexo="INSTRUMENTO_CONTRATUAL;PUBLICACAO_EXTRATO;OUTROS"
+  nomesTiposAnexo="Instrumento Contratual;Publicação do Extrato do Instrumento Contratual;Outros">
+  </app-contrato-anexo>
+</siconv-fieldset>
+  
+<footer class="footer-botoes">  
+    <button type="button" class="btn btn-secondary" style="margin-left: 20px; margin-right: 5px;" (click)="voltar()" >Voltar</button>
+  <button *ngIf="!visualizar" type="button" class="btn btn-primary " (click)="salvar()">Salvar Rascunho</button>
+</footer>

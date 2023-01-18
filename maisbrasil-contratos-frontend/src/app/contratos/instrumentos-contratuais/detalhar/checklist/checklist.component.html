@@ -1,0 +1,120 @@
+<siconv-fieldset fieldsetTitle="Checklist">
+  <div class="form-row">
+    <div class="col-md-12">
+      <label>Situação da AIO - Autorização de Início do Objeto:  </label>
+      <div class="col-md-12" *ngIf="dadosChecklist">{{dadosChecklist.situacaoAIO}}</div>
+    </div>
+  </div>
+  
+  <app-form-emissao-aio 
+    *ngIf="exibirFormularioEmissaoAIO"
+    [requestEmissaoAIO]="requestEmissaoAIO"
+  ></app-form-emissao-aio>  
+
+  <div class="form-row">
+    <div class="col-md-12">
+    <siconv-table [data]="checklistParaContratos" fileExportName="checklist" >
+      <thead header>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" style="text-align: left;">Itens de Verificação para a Conclusão de Instrumento Contratual</th>
+          <th scope="col" style="text-align: center;">Situação</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="checklistParaContratos">
+          <ng-container *ngFor="let check of checklistParaContratos">
+            <tr>
+              <td width="3%">{{check.indice}}</td>
+              <td style="text-align: left;">{{check.label}}</td>
+              <td width="10%" *ngIf="check.status === 'NOK'" style="text-align: center;">
+                <i class="fa fa-exclamation" style="color: #d32f2f; text-align: center;" tooltip="Pendente" placement="left"></i>
+              </td>
+              <td width="10%"*ngIf="check.status === 'OK'" style="text-align: center;">
+                <i class="fa fa-check" style="color:#3c7c44; text-align: center; " tooltip="Atendido" placement="left"></i>
+              </td>
+              <td width="10%" *ngIf="check.status === 'NA'" style="text-align: center;">
+                <i class="fa fa-ban" style="color:#637566; text-align: center; " tooltip="Não se aplica" placement="left"></i>
+              </td>
+              <td width="10%" *ngIf="check.status === 'INDISPONIVEL'" style="text-align: center;">
+                <i class="fa fa-exclamation-triangle" style="color: #d3b52f; text-align: center; " tooltip="Indisponível" placement="left"></i>
+              </td>
+
+            </tr>
+          </ng-container>
+      </tbody>
+    </siconv-table>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-12">
+    <siconv-table [data]="checklistParaAIO" fileExportName="checklist" >
+      <thead header>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" style="text-align: left;">Itens de Verificação para a Emissão da AIO</th>
+          <th scope="col" style="text-align: center;">Situação</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="checklistParaAIO">
+          <ng-container *ngFor="let check of checklistParaAIO">
+            <tr>
+              <td width="3%">{{check.indice}}</td>
+              <td style="text-align: left;"> {{check.label}}</td>
+              <td width="10%" *ngIf="check.status === 'NOK'" style="text-align: center;">
+                <i class="fa fa-exclamation" style="color: #d32f2f; text-align: center;" tooltip="Pendente" placement="left"></i>
+              </td>
+              <td width="10%" *ngIf="check.status === 'OK'" style="text-align: center;">
+                <i class="fa fa-check" style="color:#3c7c44; text-align: center; " tooltip="Atendido" placement="left"></i>
+              </td>
+              <td width="10%" *ngIf="check.status === 'NA'" style="text-align: center;">
+                <i class="fa fa-ban" style="color:#637566; text-align: center; " tooltip="Não se aplica" placement="left"></i>
+              </td>
+              <td width="10%" *ngIf="check.status === 'INDISPONIVEL'" style="text-align: center;">
+                <i class="fa fa-exclamation-triangle" style="color: #d3b52f; text-align: center; " tooltip="Indisponível" placement="left"></i>
+              </td>
+
+            </tr>
+          </ng-container>
+      </tbody>
+    </siconv-table>
+    </div>
+  </div>
+
+
+</siconv-fieldset>
+
+<footer class="footer-botoes">  
+  <button type="button" class="btn btn-secondary " style="margin-left: 20px; margin-right: 5px;"  (click)="voltar()">Voltar</button>
+  
+  <button *ngIf="exibeBotaoEmitirAIO" 
+    [attr.disabled]="desabilitarBotaoEmissaoAIO"
+    type="button" class="btn btn-primary " style="margin-left: 20px; margin-right: 20px;"  
+    (click)="verificarEmissaoAIO()"
+  >Verificar Emissão da AIO{{ posFixoDescricaoEmissaoAIO }}</button>
+
+  <button *ngIf="exibeBotaoConcluir" type="button" style="text-align: center;"
+    class="btn btn-primary " (click)="concluir(modalConcluir)">Concluir</button>
+
+  <button *ngIf="exibeBotaoCancelarAIO" type="button" style="text-align: center;"
+    class="btn btn-primary " (click)="verificarCancelarEmissaoAIO(modalCancelarEmissaoAIO)">Cancelar Emissão da AIO</button>
+</footer>
+
+
+<ng-template #modalConcluir>
+  <div class="modal-body text-center">
+    <p>Tem certeza que deseja concluir o instrumento contratual '{{contratoSelecionado.numero}}'?</p>
+    <button type="button" class="btn btn-primary" (click)="confirmaConclusao()">Sim</button>
+    &nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-secondary" (click)="cancelaConclusao()">Não</button>
+  </div>
+</ng-template>
+
+<ng-template #modalCancelarEmissaoAIO>
+  <div class="modal-body text-center">
+    <p>Tem certeza que deseja cancelar a emissão da Autorização de Início de Obra ?</p>
+    <button type="button" class="btn btn-primary" (click)="confirmaCancelarAIO()">Sim</button>
+    &nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-secondary" (click)="cancelaCancelarAIO()">Não</button>
+  </div>
+</ng-template>

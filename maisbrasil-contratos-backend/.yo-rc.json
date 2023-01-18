@@ -1,0 +1,42 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "br.gov.economia.maisbrasil.contratos",
+      "nativeLanguage": "pt-br"
+    },
+    "jhipsterVersion": "6.4.1",
+    "applicationType": "microservice",
+    "baseName": "maisbrasilContratosBackend",
+    "packageName": "br.gov.economia.maisbrasil.contratos",
+    "packageFolder": "br/gov/economia/maisbrasil/contratos",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "Y2I3NzA4MGZmMjUzZDkzZTU2MmM4MmM1ZGI2Y2VkOGJkMzk3MTMxNzk5NmY1M2I0MGUwNDFhMzhjMjI4M2QxNWFlZDUyYTc1ZDBlYTE0MTc0OWRmOTQzOTAzYzRmZDEyNzI3ZmYzNjcwYmM0YTc2NThhNjc0NTY2YWQ3ODkxNTU=",
+    "embeddableLaunchScript": false,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "clientPackageManager": "npm",
+    "nativeLanguage": "pt-br",
+    "languages": [
+      "pt-br",
+      "en"
+    ],
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}

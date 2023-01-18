@@ -1,0 +1,147 @@
+{
+    "name": "Contrato",
+    "fields": [
+        {
+            "fieldName": "numero",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 20
+        },
+        {
+            "fieldName": "objeto",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 5000
+        },
+        {
+            "fieldName": "dataAssinatura",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "dataPublicacao",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "inicioVigencia",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fimVigencia",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "valorTotal",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "inSituacao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "aptoAIniciar",
+            "fieldType": "Boolean",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "versao",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "adtLogin",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 60
+        },
+        {
+            "fieldName": "adtDataHora",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "adtOperacao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 6
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "anexo",
+            "otherEntityRelationshipName": "contrato",
+            "relationshipName": "anexo"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "historico",
+            "otherEntityRelationshipName": "contrato",
+            "relationshipName": "historico"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "termoAditivo",
+            "otherEntityRelationshipName": "contrato",
+            "relationshipName": "termoAditivo"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "lote",
+            "otherEntityRelationshipName": "contrato",
+            "relationshipName": "lote"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "proposta",
+            "otherEntityRelationshipName": "contrato",
+            "relationshipName": "proposta",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20191029144831",
+    "entityTableName": "contrato",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "maisbrasilContratosBackend",
+    "applications": "*",
+    "microserviceName": "maisbrasilContratosBackend"
+}

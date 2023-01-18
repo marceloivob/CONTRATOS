@@ -1,0 +1,145 @@
+<siconv-fieldset fieldsetTitle="Dados Gerais"  [collapsible]="true">
+  <form *ngIf="termoAditivoEdicao" [formGroup]="termoAditivoForm" (ngSubmit)="submit()">
+    
+    <label>
+      Tipo de Aditivo
+    </label>    
+    <div class="form-row" >
+      <div class="col-md-2" >
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" formControlName="inAlteracaoVigencia" id="checkVigencia"
+            (change)="onCheckVigenciaChange($event)">
+          <label for="checkVigencia">
+            Alteração da Vigência 
+          </label>
+        </div>
+      </div>
+      <div class="col-md-2" >
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" formControlName="inAlteracaoClausula" id="checkClausula" 
+          (change)="onCheckClausulaChange($event)">
+          <label  for="checkClausula">
+            Alteração de Cláusula
+          </label>
+        </div>
+      </div>
+      <div class="col-md-2" >
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" formControlName="inAlteracaoObjeto" id="checkObjeto" 
+          (change)="onCheckObjetoChange($event)">
+          <label  for="checkObjeto">
+            Ampliação de Objeto
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <label>Nº do Termo Aditivo</label>
+        <input class="form-control" formControlName="numero" [ngClass]="{ 'is-invalid': showError('numero') }"
+          min="0" maxlength="20" required=true >
+          <div *ngIf="showError('numero')" class="invalid-feedback">
+              <div *ngIf="field('numero').errors.required">O campo é de preenchimento obrigatório.</div>
+          </div>
+        </div>
+
+      <div class="col-md-3" >
+        <siconv-date-picker
+          label="Data de Assinatura"
+          name="dataAssinatura"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataAssinatura"
+          
+          >
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataAssinatura') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <siconv-date-picker
+          label="Data de Publicação"
+          name="dataPublicacao"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataPublicacao">
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataPublicacao') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-3" *ngIf="exibirNovaVigencia">
+        <siconv-date-picker
+          label="Nova Data de Fim de Vigência"
+          name="dataFimVigencia"
+          [required]="true"
+          [datedisabled]="visualizar"
+          formControlName="dataFimVigencia">
+        </siconv-date-picker>
+        <div [ngStyle]="{ display: showError('dataFimVigencia') ? 'block' : 'none' }" class="invalid-feedback">
+          <div>Data Inválida.</div>
+        </div>
+      </div>
+    </div>
+  
+
+    <div class="form-row" *ngIf="exibirAmpliacaoObjeto">
+      <div class="col-md-12">
+        <label>Descrição da Ampliação do Objeto</label>
+        <textarea rows="4" cols="100" maxlength="5000" class="form-control" formControlName="objeto"
+        (keyup)="calcularCaracteresRestantesTxObjeto()" [ngClass]="{ 'is-invalid': showError('objeto') }"></textarea>
+        <p *ngIf="!showError('objeto') && !visualizar">{{caracteresRestantesTxObjeto}} caracteres restantes</p>
+        <div *ngIf="showError('objeto')" class="invalid-feedback">
+            <div *ngIf="field('objeto').errors.required">O campo é de preenchimento obrigatório.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="col-md-12">
+        <label>Justificativa</label>
+        <textarea rows="4" cols="100" maxlength="5000" class="form-control" formControlName="justificativa"
+        (keyup)="calcularCaracteresRestantesTxJustificativa()" [ngClass]="{ 'is-invalid': showError('justificativa') }"></textarea>
+        <p *ngIf="!showError('justificativa') && !visualizar">{{caracteresRestantesTxJustificativa}} caracteres restantes</p>
+        <div *ngIf="showError('justificativa')" class="invalid-feedback">
+            <div *ngIf="field('justificativa').errors.required">O campo é de preenchimento obrigatório.</div>
+        </div>
+      </div>
+    </div>
+
+
+  </form>
+</siconv-fieldset>
+
+
+<siconv-fieldset *ngIf="exibirAnexos" fieldsetTitle="Anexos" [collapsible]="true">
+  <app-anexo (changed)="onAnexosChanged()"
+  tiposDoAnexo="TERMO_ADITIVO;PUBLICACAO_TERMO_ADITIVO;OUTROS"
+  nomesTiposAnexo="Termo Aditivo;Publicação de Termo Aditivo;Outros"
+  [anexos]="anexosObservable"
+  [contrato]="contratoEdicao"
+  [termoAditivo]="termoAditivoEdicao"
+  [visualizar]="visualizar"
+  [isTermoAditivo]=true>
+  </app-anexo>
+</siconv-fieldset>
+
+<siconv-fieldset *ngIf="!exibirAnexos" fieldsetTitle="Anexos" [collapsible]="true">
+  <app-contrato-anexo (setAnexos)="setAnexos($event)"
+  tiposDoAnexo="TERMO_ADITIVO;PUBLICACAO_TERMO_ADITIVO;OUTROS"
+  nomesTiposAnexo="Termo Aditivo;Publicação de Termo Aditivo;Outros">
+  </app-contrato-anexo>
+</siconv-fieldset>
+
+
+<footer class="footer-botoes">  
+  <button type="button" class="btn btn-secondary " style="margin-left: 20px; margin-right: 5px;"  (click)="voltar()">Voltar</button>
+  <button *ngIf="!visualizar && exibirSalvarRascunho" type="button" style="margin-right: 5px;" class="btn btn-primary " (click)="salvar()">Salvar Rascunho</button>
+  <button *ngIf="!visualizar" type="button" style="margin-right: 5px;" class="btn btn-primary " (click)="concluir()">Concluir</button>
+</footer>

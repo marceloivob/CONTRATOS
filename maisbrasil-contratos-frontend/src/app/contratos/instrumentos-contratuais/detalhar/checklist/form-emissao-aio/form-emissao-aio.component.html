@@ -1,0 +1,49 @@
+<form class="form-group" [formGroup]="formEmissaoAIO">
+  <div class="form-row">
+    <div class="col-md-3">
+      <siconv-date-picker
+        label="Data de Emissão da AIO"
+        name="dataEmissaoAIO"
+        [required]="true"
+        formControlName="dataEmissaoAIO"
+        [(ngModel)]="requestEmissaoAIO.dataEmissaoAIO"        
+      >
+      </siconv-date-picker>
+      <div
+        [ngStyle]="{
+          display: showError('dataEmissaoAIO') ? 'block' : 'none'
+        }"
+        class="invalid-feedback"
+      >
+        <div>Data Inválida.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="col-md-8">
+      <label>Justificativa</label>
+      <textarea
+        rows="4"
+        cols="100"
+        [attr.maxlength]="MAX_TX_JUSTIFICATIVA"
+        [required]="true"
+        class="form-control"
+        formControlName="justificativa"
+        (keyup)="calcularCaracteresRestantesTxJustificativa()"
+        [ngClass]="{ 'is-invalid': showError('justificativa') }"
+        [(ngModel)]="requestEmissaoAIO.justificativa"
+      ></textarea>
+
+      <p *ngIf="!showError('justificativa')">
+        {{ caracteresRestantesTxJustificativa }} caracteres restantes
+      </p>
+
+      <div *ngIf="showError('justificativa')" class="invalid-feedback">
+        <div *ngIf="formEmissaoAIO.get('justificativa').errors.required">
+          O campo é de preenchimento obrigatório.
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

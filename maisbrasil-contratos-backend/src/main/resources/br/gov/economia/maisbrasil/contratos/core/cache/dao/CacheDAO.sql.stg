@@ -1,0 +1,7 @@
+definirUsuarioLogado(cpf) ::= <%
+	SET LOCAL contratos.cpf_usuario TO '<cpf>';
+%>
+
+consultarUsuarioLogado() ::= <%
+	SELECT current_setting('contratos.cpf_usuario');
+%>

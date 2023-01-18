@@ -1,0 +1,61 @@
+<!-- <siconv-header *ngIf="menu && exibeMenu"
+  appName="Portal dos Convênios do Governo Federal"
+  [user]="usuario"
+  [passwordUrl]="passwordUrl"
+  [profileUrl]="profileUrl"
+  (logout)="logoutFeedback($event)"
+  [totalTime]="30"
+  [warningTime]="5"
+  (sessionTime)="sessionTimeFeedback($event)"
+  [menu]="menu">
+</siconv-header> -->
+
+<div class="header" *ngIf="menu && exibeMenu">
+  <vrpl-siconv-menu
+    [totalTime]=tempoTotalSessao
+    [warningTime]=warningTime
+    (logout)="logoutFeedback($event)"
+    (sessionTime)="sessionTimeFeedback($event)">
+  </vrpl-siconv-menu>
+</div>
+
+
+<ng-container *ngIf="propostaObservable | async as proposta">
+  <siconv-title module="INSTRUMENTOS CONTRATUAIS" title="Documentos Orçamentários" subtitle="{{proposta.identificacaoProponente | cnpj}} - {{proposta.nomeProponente}}">
+  </siconv-title>
+</ng-container>
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" routerLinkActive="active" [routerLink]="['instrumentos-contratuais']">
+      Instrumentos Contratuais
+    </a>
+  </li>
+<!--
+  <li class="nav-item">
+    <a class="nav-link" routerLinkActive="active" [routerLink]="['qci']" title="Quadro de Composição de Investimento">
+      QCI
+    </a>
+  </li>
+-->
+  <li class="nav-item">
+    <a class="nav-link" routerLinkActive="active" [routerLink]="['historico']">
+      Histórico
+    </a>
+  </li>
+
+
+</ul>
+<div class="tab-content" *ngIf="loaded">
+  <siconv-alert-messages></siconv-alert-messages>
+  <router-outlet></router-outlet>
+</div>
+
+<ng-template #templateSessao>
+  <div class="modal-body text-center">
+    <p>Deseja reiniciar sessão?</p>
+    <button type="button" class="btn btn-primary" (click)="confirmaReinicio()">Sim</button>
+    &nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-secondary" (click)="cancelaReinicio()">Não</button>
+  </div>
+</ng-template>

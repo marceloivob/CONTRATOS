@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="20201217113045" author="leo.assis" context="termo_de_compromisso">
+        <sqlFile path="config/liquibase/changelog/termo_de_compromisso/01_add_column_contratos_proposta_LEAS.sql" splitStatements="false"/>
+    </changeSet>
+    
+    <changeSet id="20201217113046" author="leo.assis" context="termo_de_compromisso">
+        <sqlFile path="config/liquibase/changelog/termo_de_compromisso/02_alterar_trigger_log_rec_proposta_LEAS.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20201217113047" author="leo.assis" context="termo_de_compromisso">
+        <sqlFile path="config/liquibase/changelog/termo_de_compromisso/03_trigger_log_rec_proposta_sem_campos_aio_LEAS.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="202103221515" author="fabio.guerra" context="termo_de_compromisso">
+        <sqlFile path="config/liquibase/changelog/termo_de_compromisso/04_202103221515_alter_constraint_historico_contrato_FGA.sql" splitStatements="false"/>
+    </changeSet>
+
+</databaseChangeLog>

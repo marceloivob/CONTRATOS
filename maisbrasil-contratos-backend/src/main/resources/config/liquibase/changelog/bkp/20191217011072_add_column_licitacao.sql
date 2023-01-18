@@ -1,0 +1,1 @@
+ALTER TABLE contratos.licitacao ADD COLUMN situacao_aceite_processo_execu varchar(1024);

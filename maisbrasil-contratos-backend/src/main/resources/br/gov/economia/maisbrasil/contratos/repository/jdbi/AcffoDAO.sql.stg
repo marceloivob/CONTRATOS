@@ -1,0 +1,25 @@
+recuperarDocComplementarAmbiental(idProp) ::= <%
+	select doc.*															 <\n>
+		from siconv.acffo_doc_complementar doc,								 <\n>
+			siconv.acffo_tp_doc_complementar tpdoc,                          <\n>
+			siconv.acffo_tp_manif_ambiental tpman,                           <\n>
+			siconv.acffo acffo                                               <\n>
+		where  doc.acffo_fk = acffo.id                                       <\n>
+			and doc.tp_doc_complementar_fk = tpdoc.id                        <\n>
+			and doc.tp_manif_ambiental_fk = tpman.id                         <\n>
+			and acffo.prop_fk = :idProp         							 <\n>
+			and tpdoc.tx_nome = 'Manifesto Ambiental'                        <\n>
+			and tpman.tx_nome in ('Dispensa','Licença de Instalação')        <\n>
+%>
+
+recuperarHistoricoDeAceite(idProp) ::= <%
+	select  siconv.acffo_historico.in_evento,											<\n>
+	        siconv.acffo_historico.in_situacao, 										<\n>
+	        siconv.acffo_historico.dt_registro											<\n>
+	from siconv.acffo																	<\n>
+	join siconv.acffo_historico on (siconv.acffo.id = siconv.acffo_historico.acffo_fk)	<\n>
+	where siconv.acffo_historico.in_situacao = 'ACT' 									<\n>
+	and siconv.acffo.prop_fk = :idProp													<\n>
+	order by siconv.acffo_historico.dt_registro asc										<\n>
+	limit 1;																			<\n>
+%>

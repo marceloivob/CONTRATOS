@@ -1,0 +1,83 @@
+
+<div *ngIf="historicoContratosCarregado">
+  <siconv-fieldset fieldsetTitle="Histórico de Eventos dos Instrumentos Contratuais" >
+    <div *ngIf="historicoContratosSemRegistros">
+      Nenhum instrumento contratual incluído.
+    </div>
+    <div *ngIf="!historicoContratosSemRegistros">
+      <ng-container *ngFor="let historico of historicoContratos">
+        <siconv-fieldset fieldsetTitle="Instrumento Contratual: {{historico.numeroContrato}}" [collapsible]="true">
+    
+          <div class="form-row">
+            <div class="col-md-12">
+            <siconv-table [data]="historico.listaRegistros" fileExportName="historicoInstrumentoContratual" [pagination]="true"
+              [export]="recuperarExport(historico.idContrato)" (listaPaginada)="getListaPaginada(historico.idContrato, $event)">
+              <thead header>
+                <tr>
+                  <th sortable-column="numeroContratoTA" sortable-type="string" scope="col">Instrumento Contratual / Termo Aditivo</th>
+                  <th sortable-column="evento" sortable-type="string" scope="col">Evento</th>
+                  <th sortable-column="situacao" sortable-type="string" scope="col">Situação</th>
+                  <th sortable-column="dataHora" sortable-type="string" scope="col">Data / Hora</th>
+                  <th sortable-column="responsavel" sortable-type="string" scope="col">Responsável</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="historico.listaRegistros">
+                  <ng-container *ngFor="let registro of recuperarLista(historico.idContrato)">
+                    <tr>
+                      <td><strong>{{registro.numeroContratoTA}}</strong></td>
+                      <td><strong>{{registro.evento}}</strong></td>
+                      <td><strong>{{registro.situacao}}</strong></td>
+                      <td><strong>{{registro.dataHora}}</strong></td>
+                      <td><strong>{{registro.responsavel}}</strong></td>
+                    </tr>
+                  </ng-container>
+              </tbody>
+            </siconv-table>
+            </div>
+          </div>
+          
+        </siconv-fieldset>
+      </ng-container>
+    </div>
+  </siconv-fieldset>
+</div>
+
+<div *ngIf="historicoContratosExcluidosCarregado">
+  <siconv-fieldset fieldsetTitle="Histórico de Eventos dos Instrumentos Contratuais Excluídos" >
+    <div>
+      <ng-container *ngFor="let historico of historicoContratosExcluidos">
+        <siconv-fieldset fieldsetTitle="Instrumento Contratual: {{historico.numeroContrato}}" [collapsible]="true" [collapsed]="true">
+          
+          <div class="form-row">
+            <div class="col-md-12">
+            <siconv-table [data]="historico.listaRegistros" fileExportName="historicoInstrumentoContratual" [pagination]="true"
+              [export]="recuperarExport(historico.idContrato)" (listaPaginada)="getListaPaginada(historico.idContrato, $event)">
+              <thead header>
+                <tr>
+                  <th sortable-column="numeroContratoTA" sortable-type="string" scope="col">Instrumento Contratual / Termo Aditivo</th>
+                  <th sortable-column="evento" sortable-type="string" scope="col">Evento</th>
+                  <th sortable-column="situacao" sortable-type="string" scope="col">Situação</th>
+                  <th sortable-column="dataHora" sortable-type="string" scope="col">Data / Hora</th>
+                  <th sortable-column="responsavel" sortable-type="string" scope="col">Responsável</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="historico.listaRegistros">
+                  <ng-container *ngFor="let registro of recuperarLista(historico.idContrato)">
+                    <tr>
+                      <td><strong>{{registro.numeroContratoTA}}</strong></td>
+                      <td><strong>{{registro.evento}}</strong></td>
+                      <td><strong>{{registro.situacao}}</strong></td>
+                      <td><strong>{{registro.dataHora}}</strong></td>
+                      <td><strong>{{registro.responsavel}}</strong></td>
+                    </tr>
+                  </ng-container>
+              </tbody>
+            </siconv-table>
+            </div>
+          </div>
+
+        </siconv-fieldset>
+      </ng-container>
+    </div>
+  </siconv-fieldset>
+</div>

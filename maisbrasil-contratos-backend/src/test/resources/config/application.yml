@@ -1,0 +1,120 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration is used for unit/integration tests.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+logging:
+  level:
+    ROOT: DEBUG
+    io.github.jhipster: DEBUG
+    br.gov.economia.maisbrasil.contratos: DEBUG
+
+vrpl:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5435/db-maisbrasil-contratos
+    username: owner_siconv_p
+    password: owner_siconv_p
+    driver-class-name: org.postgresql.Driver
+    auto-commit: false
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+
+spring:
+  application:
+    name: maisbrasilContratosBackend
+  datasource:
+    contratos:
+      name: contratos
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:postgresql://localhost:5435/db-maisbrasil-contratos
+      username: owner_siconv_p
+      password: owner_siconv_p
+      hikari:
+        auto-commit: false
+  liquibase:
+    contexts: test
+  mail:
+    host: localhost
+  main:
+    allow-bean-definition-overriding: true
+  messages:
+    basename: i18n/messages
+  mvc:
+    favicon:
+      enabled: false
+  task:
+    execution:
+      thread-name-prefix: maisbrasil-contratos-backend-task-
+      pool:
+        core-size: 1
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: maisbrasil-contratos-backend-scheduling-
+      pool:
+        size: 1
+  thymeleaf:
+    mode: HTML
+
+server:
+  port: 10344
+  address: localhost
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+  clientApp:
+    name: 'maisbrasilContratosBackendApp'
+  logging:
+    # To test json console appender
+    use-json-format: true # By default, logs are in Json format
+    logstash:
+      enabled: false
+      host: localhost
+      port: 5000
+      queue-size: 512
+  cors:
+    allowed-origins: "*"
+    allowed-methods: "GET, POST, PUT, DELETE, OPTIONS, HEAD"
+    allowed-headers: "origin,content-type,accept,authorization"
+    exposed-headers: "Authorization,Link,X-Total-Count"
+    allow-credentials: true
+    max-age: 1800
+  security:
+    authentication:
+      jwt:
+        # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
+        base64-secret: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoIVolQydZAWYFnRwluqCNx8mkJ4g+XJmDWFnYwT6uX8PpUd3GGET9orNWQPDyX8iO32pasAWK2JjLFr2jm0+zjhvgTywGbHv5s/io7XeGtn5RrK9o5pdD4OFccvQKElmyQIROFNscNl2Ov53JN6J8aSGCBFWpFuM21jNV/bxx24zAM6AKJGtjQcRwgMiV/FWEzCBDybQ68LzqCDXaxbdPukUnEb5k/N5S9SQqkG+5FMPKwVvpaOXIyA3qyL5ipyNYX8KFa3ZKsPTyYmDqN3296g5unffd8f+r2r4AdrtazkTXlzoHLOh/v2GORw8N73DvFtqjYKWX3bHP/wDPXSTwQIDAQAB
+        # Token is valid 24 hours
+        token-validity-in-seconds: 86400
+  metrics:
+    logs: # Reports metrics in the logs
+      enabled: true
+      report-frequency: 60 # in seconds
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# application:

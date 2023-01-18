@@ -1,0 +1,21 @@
+<ul class="nav nav-tabs segundo-nivel">
+  <li>
+    <a class="nav-link segundo-nivel" routerLinkActive="active" [routerLink]="url">
+      Instrumento Contratual
+    </a>
+  </li>
+  <li *ngIf="showChecklist">
+    <a class="nav-link segundo-nivel" routerLinkActive="active" [routerLink]="urlChecklist">
+      Checklist
+    </a>
+  </li>
+  <li *ngIf="showTermosAditivos">
+    <a class="nav-link segundo-nivel" routerLinkActive="active" [routerLink]="urlTermosAditivos">
+      Termos Aditivos
+    </a>
+  </li>
+
+</ul>
+<div class="tab-content">
+  <router-outlet></router-outlet>
+</div>

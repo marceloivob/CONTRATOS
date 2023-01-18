@@ -1,0 +1,49 @@
+recuperarEmailsPerfilProponente(propostaFk, perfis) ::= <%
+	select mp.email																			<\n>
+		from siconv.membro_partc mp															<\n>
+			inner join siconv.papel_membro pplm on pplm.ativo  and pplm.membro_fk = mp.id	<\n>
+			inner join siconv.prop on prop.proponente_fk = pplm.proponente_fk				<\n>
+		where prop.id = :propostaFk															<\n>
+			and mp.situacao_inativacao = 'ATIVO'											<\n>
+			and exists(																		<\n>
+				select 'x' from siconv.papeis_papel_membro ppm								<\n>
+					inner join siconv.papeis_possiveis pppsv on ppm.papeis_fk = pppsv.id	<\n>
+					where ppm.papel_membro_fk = pplm.id										<\n>
+						and pppsv.identificador in (<perfis>)								<\n>
+				)																			<\n>
+		group by mp.email;																	<\n>
+%>
+
+recuperarEmailsPerfilConcedente(propostaFk, perfis) ::= <%
+	select mp.email																				<\n>
+		from siconv.membro_partc mp																<\n>
+			inner join siconv.papel_membro pplm on pplm.ativo  and pplm.membro_fk = mp.id		<\n>
+			inner join siconv.org_administrativo org on pplm.concedente_fk = org.id				<\n>
+			inner join siconv.prop on prop.org_concedente_fk in (org.id, org.org_superior_fk)	<\n>
+		where prop.id = :propostaFk																<\n>
+			and mp.situacao_inativacao = 'ATIVO'												<\n>
+			and exists(																			<\n>
+					select 'x' from siconv.papeis_papel_membro ppm								<\n>
+						inner join siconv.papeis_possiveis pppsv on ppm.papeis_fk = pppsv.id	<\n>
+					where ppm.papel_membro_fk = pplm.id											<\n>
+						and pppsv.identificador in (<perfis>)									<\n>
+					)																			<\n>
+		group by mp.email;																		<\n>
+%>
+
+recuperarEmailsPerfilMandataria(propostaFk, perfis) ::= <%
+	select mp.email																						<\n>
+		from siconv.membro_partc mp																		<\n>
+			inner join siconv.papel_membro pplm on pplm.ativo  and pplm.membro_fk = mp.id				<\n>
+			inner join siconv.org_administrativo org on pplm.concedente_fk = org.id						<\n>
+			inner join siconv.prop on prop.instituicao_mandataria_fk in (org.id, org.org_superior_fk)	<\n>
+		where prop.id = :propostaFk																		<\n>
+			and mp.situacao_inativacao = 'ATIVO'														<\n>
+			and exists(																					<\n>
+					select 'x' from siconv.papeis_papel_membro ppm										<\n>
+						inner join siconv.papeis_possiveis pppsv on ppm.papeis_fk = pppsv.id			<\n>
+					where ppm.papel_membro_fk = pplm.id													<\n>
+						and pppsv.identificador in (<perfis>)											<\n>
+					)																					<\n>
+		group by mp.email;																				<\n>
+%>

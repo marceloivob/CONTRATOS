@@ -1,0 +1,43 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    
+    <changeSet id="20221018145400" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/01_ajuste_constraints_exclusao_contrato_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20221018164300" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/02_alter_data_registro_historico_data_type_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20221024171000" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/03_alter_table_termo_aditivo_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20221111145000" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/04_alter_table_contrato_add_fim_vigencia_original_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20221711130400" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/05_update_table_contrato_fim_vigencia_original_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20221711131000" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/06_alter_table_contrato_fim_vigencia_original_not_null_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20221711153200" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/07_alter_table_termo_aditivo_drop_not_null_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20221711163000" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/08_alter_table_termo_aditivo_log_rec_drop_not_null_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20222211130000" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/09_ajuste_constraints_situacao_contrato_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20222411090000" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/10_ajuste_constraint_situacao_historico_contrato_FGA.sql" splitStatements="false"/>
+    </changeSet>
+    <changeSet id="20223011145000" author="fabio.guerra" context="termo_aditivo">
+        <sqlFile path="config/liquibase/changelog/termo_aditivo/11_comments_on_tables_TAD_FGA.sql" splitStatements="false"/>
+    </changeSet>
+
+                       
+</databaseChangeLog>

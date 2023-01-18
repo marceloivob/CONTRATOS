@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <!--
+        Added the constraints for entity SubmetaDocComplementar.
+    -->
+    <changeSet id="20191029144836-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="submeta_id"
+                                 baseTableName="submeta_doc_complementar"
+                                 constraintName="fk_submeta_doc_complementar_submeta_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="submeta"/>
+
+        <addForeignKeyConstraint baseColumnNames="doc_complementar_id"
+                                 baseTableName="submeta_doc_complementar"
+                                 constraintName="fk_submeta_doc_complementar_doc_complementar_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="doc_complementar"/>
+
+    </changeSet>
+</databaseChangeLog>

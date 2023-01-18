@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="20200210150900" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/01_create_table_aio.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200210150901" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/02_create_table_aio_log_rec.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200210150902" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/03_table_aio_grants.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200210150903" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/04-triggers_concorrencia_aio.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200210150904" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/05-triggers_aio_log_rec.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200210150905" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/06-remove_fields_proposta.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200210150906" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/07-atualiza_trigger_proposta.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200210150907" author="daniel.alcantara" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/08-atualiza_constraint_proposta.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200218150908" author="leonardo.assis" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/09-grants_aio_p.sql" splitStatements="false" />
+    </changeSet>
+    <changeSet id="20200218150909" author="leonardo.assis" context="mvp02_alteracoes">
+        <sqlFile path="config/liquibase/changelog/mvp2/11-alter_field_data_hora_aio_.sql" splitStatements="false" />
+    </changeSet>
+</databaseChangeLog>

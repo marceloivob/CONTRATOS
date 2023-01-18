@@ -1,0 +1,2 @@
+ALTER TABLE contratos.historico DROP CONSTRAINT ck_historico_situacao_contrato;
+ALTER TABLE contratos.historico ADD constraint ck_historico_situacao_contrato CHECK (((situacao_contrato)::text = ANY (ARRAY[('RAS'::character varying)::text, ('CON'::character varying)::text, ('EXC'::character varying)::text, ('ADR'::character varying)::text, ('ADC'::character varying)::text, ('RAR'::character varying)::text, ('RAC'::character varying)::text])));

@@ -1,0 +1,159 @@
+variables:
+  GIT_SSL_NO_VERIFY: 1
+  PLATFORM: frontend:nginx # ${PLATFORM} # Plataforma da aplicação
+  ENVIRONMENT_DESENV: d # Ambiente criado no portal
+  ENVIRONMENT_TESTE: t # Ambiente criado no portal
+  ENVIRONMENT_HOMOLOGACAO: h # Ambiente criado no portal
+  ENVIRONMENT_PRODUCAO: p # Ambiente criado no portal
+cache:
+  paths:
+  - node_modules/
+stages:    
+    - Build:Teste Unitário
+    - build    
+    - Build:Análise de Qualidade de Código
+    - build-estaleiro
+    - deploy    
+
+.config_cli_estaleiro: &config_cli_estaleiro
+  image: hub.estaleiro.serpro/pipeline/cliente-estaleiro:latest
+  before_script:
+    - export VERSAO_IMAGEM=1.0.0-b$CI_PIPELINE_ID-${CI_COMMIT_SHA:0:8}
+    - estaleiro config token --literal $TOKEN
+    - estaleiro config system siconv
+
+before_script:
+   - export VERSION=1.0.0-b$CI_PIPELINE_ID-${CI_COMMIT_SHA:0:8}
+
+Build:Teste Unitário:
+  before_script:
+    - export VERSION=1.0.0-b$CI_PIPELINE_ID-${CI_COMMIT_SHA:0:8}
+    - echo $CI_BUILD_ID
+    - echo $VERSION
+    - echo "before_script"
+    - npm config set @serpro:registry https://nexus.aic.serpro.gov.br/repository/npm-private/
+  image: hub.estaleiro.serpro/pipeline/node:10-alpine-chrome
+  stage: Build:Teste Unitário
+  script:
+    - echo $VERSION   
+    - echo "Testes unitários..."    
+    - node -v
+    - npm -v        
+    - npm install --silent
+    - npm run test:ci
+  allow_failure: false
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ./node_modules
+  artifacts:
+    paths:
+      - coverage/
+      - reports/
+      - dist/
+      - conf/
+      - src/
+      - e2e/
+      - tslint.json
+      - sonar-project.properties
+    expire_in: 1 day
+
+build-frontend:
+  image: hub.estaleiro.serpro/pipeline/node:10-alpine
+  stage: build
+  script:
+   - curl "http://ftp.devops.dev.serpro/ftp/alpine/node-sass/$(cat /etc/os-release | grep "^ID=" | sed -r 's/^ID=//')_node$(node -v | sed -r 's/v([^.]+)\..+/\1/').node" -o /opt/node-sass.node
+   - export SASS_BINARY_PATH=/opt/node-sass.node
+   - echo 'Building frontend'
+   - npm config set registry https://nexus.aic.serpro.gov.br/repository/npm-group
+   - npm install --silent
+   - npm run build_des
+  dependencies:
+    - Build:Teste Unitário   
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - ./node_modules
+  artifacts:
+    paths:
+      - coverage/
+      - reports/
+      - dist/
+      - conf/
+      - src/
+      - e2e/
+      - tslint.json
+      - sonar-project.properties
+    expire_in: 1 day
+
+Build:Análise de Qualidade de Código:
+  before_script:
+    - export VERSION=1.0.0-b$CI_PIPELINE_ID-${CI_COMMIT_SHA:0:8}
+    - echo "before_script"
+    - npm config set @serpro:registry https://nexus.aic.serpro.gov.br/repository/npm-private/
+  image: hub.estaleiro.serpro/pipeline/sonar-scanner:latest
+  stage: Build:Análise de Qualidade de Código
+  script:
+    - echo "Análise de qualidade de código..."
+    - npm install --save-dev karma-sonarqube-unit-reporter karma-junit-reporter gulp sonarqube-scanner
+    - sonar-scanner -Dsonar.projectVersion=$VERSION -Dsonar.links.scm=$CI_PROJECT_URL -Djacoco.skip=true
+  dependencies:
+    - build-frontend
+  variables:
+    GIT_STRATEGY: none
+
+build-image-estaleiro:
+  stage: build-estaleiro
+  <<: *config_cli_estaleiro
+  script:
+    - pwd
+    - ls
+    - cd dist
+    - rm -Rf conf
+    - mv ../conf .
+    - estaleiro app build --module maisbrasil-contratos-frontend --platform frontend:nginx --version $VERSAO_IMAGEM
+
+deploy-des:
+  stage: deploy
+  <<: *config_cli_estaleiro
+  script:
+    - pwd
+    - ls -lha
+    - cd dist
+    - ls -lha    
+    - echo 'Deploying frontend to Desenv'
+    - estaleiro app promote mod d --module maisbrasil-contratos-frontend --version $VERSAO_IMAGEM
+  environment:
+    name: $ENVIRONMENT_DESENV
+  when: manual
+  
+
+deploy-tes:
+  stage: deploy
+  <<: *config_cli_estaleiro
+  script:
+    - echo 'Deploying frontend to test'
+    - estaleiro app promote mod t --module maisbrasil-contratos-frontend --version $VERSAO_IMAGEM
+  environment:
+    name: $ENVIRONMENT_TES
+  when: manual
+
+deploy-hom:
+  stage: deploy
+  <<: *config_cli_estaleiro
+  script:
+    - echo 'Deploying frontend to hom'
+    - estaleiro app promote mod h --module maisbrasil-contratos-frontend --version $VERSAO_IMAGEM
+  environment:
+    name: $ENVIRONMENT_HOM
+  when: manual
+  
+deploy-pro:
+  stage: deploy
+  <<: *config_cli_estaleiro
+  script:
+    - echo 'Deploying frontend to pro'
+    - estaleiro app promote mod p --module maisbrasil-contratos-frontend --version $VERSAO_IMAGEM
+  environment:
+    name: $ENVIRONMENT_PRODUCAO
+  when: manual
